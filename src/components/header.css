@@ -1,0 +1,15 @@
+.logo img{
+	width: 4rem;
+}
+.topbar-container {
+	display: flex;
+	justify-content: space-between;
+}
+.cart-profile-container {
+	display: flex;
+	justify-content: end;
+}
+.dropdown-position {
+left: auto  !important;
+right: 0px !important;
+}
