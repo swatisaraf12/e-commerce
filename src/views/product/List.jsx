@@ -11,6 +11,7 @@ import CardServices from "../../components/card/CardServices";
 import CardProductGrid from "../../components/card/CardProductGrid";
 import CardProductList from "../../components/card/CardProductList";
 import axios from "axios";
+import Paging from '../../components/Paging'
 
 const ProductListView = () => {
   const [products, setProducts] = useState();
@@ -20,6 +21,11 @@ const ProductListView = () => {
       .get("https://dummyjson.com/products?limit=12&page=1")
       .then((res) => setProducts([...res.data.products]));
   }, []);
+  const onChangePage=(pageNumber)=>{
+    axios
+      .get(`https://dummyjson.com/products?limit=12&skip=${pageNumber*12}`)
+      .then((res) => setProducts([...res.data.products]));
+  }
 
   if (!products || products.length < 1) {
     return <p>No Product Found</p>;
@@ -116,14 +122,14 @@ const ProductListView = () => {
                 })}
             </div>
             <hr />
-            {/* <Paging
-              totalRecords={totalItems}
-              pageLimit={9}
+            <Paging
+              totalRecords={100}
+              pageLimit={12}
               pageNeighbours={3}
-              onPageChanged={this.onPageChanged}
+              onPageChanged={(e)=>onChangePage(e.currentPage)}
               sizing=""
               alignment="justify-content-center"
-            /> */}
+            />
           </div>
         </div>
       </div>
