@@ -1,5 +1,4 @@
-
-import { createContext } from 'react';
+import { createContext } from "react";
 // import { reducer as formReducer } from "redux-form";
 // export default combineReducers({
 //   form: formReducer,
@@ -7,13 +6,11 @@ import { createContext } from 'react';
 // });
 
 const defaultValues = {
-  cart: {},
+  cart: [],
   user: {},
   addToCart: () => {},
-  removeFromCart:() => {},
-  updateUser: () => {}
-}
-
+  removeFromCart: () => {},
+  updateUser: () => {},
+};
 
 export const AppContext = createContext(defaultValues);
-

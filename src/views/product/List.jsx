@@ -45,11 +45,11 @@ const ProductListView = () => {
           <div className="col-md-3">
             <FilterCategory />
             <FilterPrice />
-            <FilterSize />
+            {/* <FilterSize />
             <FilterStar />
-            <FilterColor />
+            <FilterColor /> */}
             <FilterClear />
-            <FilterTag />
+            {/* <FilterTag /> */}
             <CardServices />
           </div>
           <div className="col-md-9">

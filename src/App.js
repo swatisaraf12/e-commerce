@@ -20,8 +20,8 @@ const ProductListView = lazy(() => import("./views/product/List"));
 
 // const ProductDetailView = lazy(() => import("./views/product/Detail"));
 // const StarZoneView = lazy(() => import("./views/product/StarZone"));
-// const CartView = lazy(() => import("./views/cart/Cart"));
-// const CheckoutView = lazy(() => import("./views/cart/Checkout"));
+const CartView = lazy(() => import("./views/cart/Cart"));
+const CheckoutView = lazy(() => import("./views/cart/Checkout"));
 // const InvoiceView = lazy(() => import("./views/cart/Invoice"));
 // const DocumentationView = lazy(() => import("./views/Documentation"));
 // const NotFoundView = lazy(() => import("./views/pages/404"));
@@ -32,10 +32,10 @@ const ProductListView = lazy(() => import("./views/product/List"));
 // const BlogDetailView = lazy(() => import("./views/blog/Detail"));
 
 function App() {
-  const [cart, setCart] = useState({});
+  const [cart, setCart] = useState([]);
   const [user, setUser] = useState({});
   useEffect(() => {
-    console.log({ cart });
+    console.log(cart);
   }, [cart]);
   return (
     <BrowserRouter>
@@ -43,8 +43,11 @@ function App() {
         value={{
           cart,
           user,
-          addToCart: (newItem) => setCart((val) => ({ ...val, newItem })),
-          removeFromCart: (removeVal) => {},
+          // addToCart: (newItem) => setCart((val) => [...val, newItem]),
+          addToCart: (newItem) => setCart(newItem),
+          removeFromCart: (removeVal) => {
+            setCart(cart.filter((product) => product.id !== removeVal.id));
+          },
           updateUser: (user) => setUser(user),
         }}
       >
@@ -56,6 +59,8 @@ function App() {
         >
           <Routes>
             <Route exact path="/" element={<ProductListView />} />
+            <Route exact path="/cart" element={<CartView />} />
+            <Route exact path="/checkout" element={<CheckoutView />} />
             {/* <Route exact path="/account/signin" element={<SignInView/>} />
             <Route exact path="/account/signup" element={<SignUpView/>} />
             <Route

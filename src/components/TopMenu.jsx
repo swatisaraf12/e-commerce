@@ -1,6 +1,9 @@
+import { useContext } from "react";
 import { Link } from "react-router-dom";
+import { AppContext } from "../reducers";
 import  './header.css'
 const TopMenu = () => {
+const { cart } = useContext(AppContext);
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark p-0">
       <div className="container-fluid">
@@ -85,7 +88,7 @@ const TopMenu = () => {
               <Link to="/cart" className="btn btn-primary">
                 <i className="bi bi-cart3"></i>
                 <div className="position-absolute top-0 start-100 translate-middle badge bg-danger rounded-circle">
-                  2
+                {[...new Set(cart.map(obj => obj.id))].length}
                 </div>
               </Link>
             </div>

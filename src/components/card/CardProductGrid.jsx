@@ -1,6 +1,23 @@
+import { useContext } from "react";
 import { Link } from "react-router-dom";
+import { AppContext } from "../../reducers";
 
 const CardProductGrid = ({ product }) => {
+  const { addToCart,cart } = useContext(AppContext);
+  const addToCartHandler = (product) => {
+    const isProductAdded = cart.find((item) => item.id === product.id);
+    if (isProductAdded) {
+      console.log(isProductAdded,"isProductAdded")
+      const qty = isProductAdded.qty + 1;
+      const otherProduct = cart.filter((item) => item.id !== product.id);
+      console.log(otherProduct,"otherProduct")
+      addToCart([...otherProduct, { ...product, qty: qty }]);
+    } else {
+      console.log([...cart,{ ...product, qty: 1 }],"cart")
+      addToCart([...cart,{ ...product, qty: 1 }]);
+    }
+    //
+  };
   return (
     <div className="card">
       <img
@@ -32,6 +49,8 @@ const CardProductGrid = ({ product }) => {
             type="button"
             className="btn btn-sm btn-primary"
             title="Add to cart"
+          //  onClick={() => addToCart( product  )}
+          onClick={() => addToCartHandler(product)}
           >
             <i className="bi bi-cart-plus" />
           </button>

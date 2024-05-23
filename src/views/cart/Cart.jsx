@@ -1,13 +1,32 @@
-import { lazy } from "react";
+import { useContext } from "react";
 import { Link } from "react-router-dom";
-const CouponApplyForm = lazy(() =>
-  import("../../components/others/CouponApplyForm")
-);
+import { AppContext } from "../../reducers";
+
 
 const CartView = () => {
-  const onSubmitApplyCouponCode = async (values) => {
-    alert(JSON.stringify(values));
-  };
+  // const onSubmitApplyCouponCode = async (values) => {
+  //   alert(JSON.stringify(values));
+  // };
+  const { cart,addToCart,removeFromCart } = useContext(AppContext);
+
+  const addQty=(product)=>{
+    const isProductAdded = cart.find((item) => item.id === product.id);
+    const qty = isProductAdded.qty + 1;
+      const otherProduct = cart.filter((item) => item.id !== product.id);
+      console.log(otherProduct,"otherProduct")
+      addToCart([...otherProduct, { ...product, qty: qty }]);
+  }
+  const lessQty=(product)=>{
+    const isProductAdded = cart.find((item) => item.id === product.id);
+    const qty = isProductAdded.qty - 1;
+    if(qty>0)
+     { const otherProduct = cart.filter((item) => item.id !== product.id);
+      console.log(otherProduct,"otherProduct")
+      addToCart([...otherProduct, { ...product, qty: qty }]);
+     }
+  }
+
+const totalPrice=cart.reduce((acc, product) => acc + (product.price*product.qty), 0);
   return (
     <div>
       <div className="bg-secondary border-top p-4 text-white mb-3">
@@ -32,25 +51,25 @@ const CartView = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
+                    {cart.map((product,index)=>{return (   <tr>
                       <td>
                         <div className="row">
                           <div className="col-3 d-none d-md-block">
                             <img
-                              src="../../images/products/tshirt_red_480x400.webp"
+                              src={product.images[0]}
                               width="80"
                               alt="..."
                             />
                           </div>
                           <div className="col">
-                            <Link
+                            {/* <Link
                               to="/product/detail"
                               className="text-decoration-none"
                             >
                               Another name of some product goes just here
-                            </Link>
+                            </Link> */}
                             <p className="small text-muted">
-                              Size: XL, Color: blue, Brand: XYZ
+                              {product.title}
                             </p>
                           </div>
                         </div>
@@ -60,96 +79,41 @@ const CartView = () => {
                           <button
                             className="btn btn-primary text-white"
                             type="button"
+                            onClick={()=>{lessQty(product)}}
                           >
                             <i className="bi bi-dash-lg"></i>
                           </button>
                           <input
                             type="text"
                             className="form-control"
-                            defaultValue="1"
+                            defaultValue={product.qty}
+                            value={product.qty}
                           />
                           <button
                             className="btn btn-primary text-white"
                             type="button"
+                            onClick={()=>{addQty(product)}}
                           >
                             <i className="bi bi-plus-lg"></i>
                           </button>
                         </div>
                       </td>
                       <td>
-                        <var className="price">$237.00</var>
+                        <var className="price">{product.price*product.qty}</var>
                         <small className="d-block text-muted">
-                          $79.00 each
+                          ${product.price} each
                         </small>
                       </td>
                       <td className="text-end">
-                        <button className="btn btn-sm btn-outline-secondary me-2">
+                        {/* <button className="btn btn-sm btn-outline-secondary me-2">
                           <i className="bi bi-heart-fill"></i>
-                        </button>
-                        <button className="btn btn-sm btn-outline-danger">
+                        </button> */}
+                        <button className="btn btn-sm btn-outline-danger" onClick={()=>removeFromCart(product)}>
                           <i className="bi bi-trash"></i>
                         </button>
                       </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <div className="row">
-                          <div className="col-3 d-none d-md-block">
-                            <img
-                              src="../../images/products/tshirt_grey_480x400.webp"
-                              width="80"
-                              alt="..."
-                            />
-                          </div>
-                          <div className="col">
-                            <Link
-                              to="/product/detail"
-                              className="text-decoration-none"
-                            >
-                              Another name of some product goes just here
-                            </Link>
-                            <p className="small text-muted">
-                              Size: XL, Color: blue, Brand: XYZ
-                            </p>
-                          </div>
-                        </div>
-                      </td>
-                      <td>
-                        <div className="input-group input-group-sm mw-140">
-                          <button
-                            className="btn btn-primary text-white"
-                            type="button"
-                          >
-                            <i className="bi bi-dash-lg"></i>
-                          </button>
-                          <input
-                            type="text"
-                            className="form-control"
-                            defaultValue="1"
-                          />
-                          <button
-                            className="btn btn-primary text-white"
-                            type="button"
-                          >
-                            <i className="bi bi-plus-lg"></i>
-                          </button>
-                        </div>
-                      </td>
-                      <td>
-                        <var className="price">$237.00</var>
-                        <small className="d-block text-muted">
-                          $79.00 each
-                        </small>
-                      </td>
-                      <td className="text-end">
-                        <button className="btn btn-sm btn-outline-secondary me-2">
-                          <i className="bi bi-heart-fill"></i>
-                        </button>
-                        <button className="btn btn-sm btn-outline-danger">
-                          <i className="bi bi-trash"></i>
-                        </button>
-                      </td>
-                    </tr>
+                    </tr>)})}
+                  
                   </tbody>
                 </table>
               </div>
@@ -168,30 +132,30 @@ const CartView = () => {
               </p>
             </div>
           </div>
-          <div className="col-md-3">
-            <div className="card mb-3">
+           <div className="col-md-3">
+            {/* <div className="card mb-3">
               <div className="card-body">
-                <CouponApplyForm onSubmit={onSubmitApplyCouponCode} />
+               <CouponApplyForm onSubmit={onSubmitApplyCouponCode} /> 
               </div>
-            </div>
-            <div className="card">
+            </div>  */}
+            <div className="card" style={{width:"400px"}}>
               <div className="card-body">
                 <dl className="row border-bottom">
                   <dt className="col-6">Total price:</dt>
-                  <dd className="col-6 text-end">$1,568</dd>
+                  <dd className="col-6 text-end">${totalPrice}</dd>
 
                   <dt className="col-6 text-success">Discount:</dt>
-                  <dd className="col-6 text-success text-end">-$58</dd>
+                  <dd className="col-6 text-success text-end">-$0</dd>
                   <dt className="col-6 text-success">
                     Coupon:{" "}
                     <span className="small text-muted">EXAMPLECODE</span>{" "}
                   </dt>
-                  <dd className="col-6 text-success text-end">-$68</dd>
+                  <dd className="col-6 text-success text-end">-$100</dd>
                 </dl>
                 <dl className="row">
                   <dt className="col-6">Total:</dt>
                   <dd className="col-6 text-end  h5">
-                    <strong>$1,350</strong>
+                    <strong>${totalPrice-100}</strong>
                   </dd>
                 </dl>
                 <hr />

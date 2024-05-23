@@ -1,4 +1,9 @@
+import { useContext } from "react";
+import { Link } from "react-router-dom";
+import { AppContext } from "../../reducers";
 const CheckoutView = () => {
+  const { cart } = useContext(AppContext);
+  const totalPrice=cart.reduce((acc, product) => acc + (product.price*product.qty), 0);
   return (
     <div>
       <div className="bg-secondary border-top p-4 text-white mb-3">
@@ -241,7 +246,7 @@ const CheckoutView = () => {
               </div>
               <div className="card-footer border-info d-grid">
                 <button type="button" className="btn btn-info">
-                  Pay Now <strong>$162</strong>
+                  Pay Now <strong>${totalPrice-100}</strong>
                 </button>
               </div>
             </div>
@@ -250,10 +255,17 @@ const CheckoutView = () => {
             <div className="card">
               <div className="card-header">
                 <i className="bi bi-cart3"></i> Cart{" "}
-                <span className="badge bg-secondary float-end">3</span>
+                <span className="badge bg-secondary float-end">{cart.length}</span>
               </div>
               <ul className="list-group list-group-flush">
-                <li className="list-group-item d-flex justify-content-between lh-sm">
+                {cart.map(product=>{return( <li className="list-group-item d-flex justify-content-between lh-sm">
+                  <div>
+                    <h6 className="my-0">{product.title}</h6>
+                    <small className="text-muted">{product.brand}</small>
+                  </div>
+                  <span className="text-muted">${product.price*product.qty}</span>
+                </li>)})}
+                {/* <li className="list-group-item d-flex justify-content-between lh-sm">
                   <div>
                     <h6 className="my-0">Product name</h6>
                     <small className="text-muted">Brief description</small>
@@ -273,17 +285,17 @@ const CheckoutView = () => {
                     <small className="text-muted">Brief description</small>
                   </div>
                   <span className="text-muted">$50</span>
-                </li>
+                </li> */}
                 <li className="list-group-item d-flex justify-content-between bg-light">
                   <div className="text-success">
                     <h6 className="my-0">Promo code</h6>
                     <small>EXAMPLECODE</small>
                   </div>
-                  <span className="text-success">−$50</span>
+                  <span className="text-success">−$100</span>
                 </li>
                 <li className="list-group-item d-flex justify-content-between">
                   <span>Total (USD)</span>
-                  <strong>$162</strong>
+                  <strong>${totalPrice-100}</strong>
                 </li>
               </ul>
             </div>
