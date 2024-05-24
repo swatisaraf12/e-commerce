@@ -11,6 +11,10 @@ const defaultValues = {
   addToCart: () => {},
   removeFromCart: () => {},
   updateUser: () => {},
+  products: [],
+  setProducts: () => {},
+  selectedCategory: "",
+  setSelectedCategory: () => {},
 };
 
 export const AppContext = createContext(defaultValues);

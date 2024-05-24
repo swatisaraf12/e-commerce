@@ -1,14 +1,32 @@
-import React,{useEffect,useState} from "react";
+import React,{useEffect,useState,useContext} from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { AppContext } from "../../reducers";
 const FilterCategory = (props) => {
   const [category,setCategory]=useState([]);
+  const { setProducts,selectedCategory,setSelectedCategory} = useContext(AppContext);
   // {[...new Set(cart.map(obj => obj.id))].length}
   useEffect(() => {
     axios
-      .get("https://dummyjson.com/products?limit=12&page=1")
-      .then((res) => setCategory([...new Set([...res.data.products].map(item=>item.category))]));
+    .get("https://dummyjson.com/products/categories")
+    .then((res) => setCategory([...res.data]));
   }, []);
+
+  useEffect(() => {
+    if(selectedCategory && selectedCategory!=="All")
+      {
+    axios
+      .get(`https://dummyjson.com/products/category/${selectedCategory}`)
+      .then((res) => setProducts([...res.data.products]));
+      }
+      else 
+         {
+          axios
+          .get("https://dummyjson.com/products?limit=12&page=1")
+          .then((res) => setProducts([...res.data.products]));
+         }
+        
+  }, [selectedCategory]);
 
   return (
     <div className="card mb-3 accordion">
@@ -25,9 +43,15 @@ const FilterCategory = (props) => {
         className="list-group list-group-flush show"
         id="filterCategory"
       >
+         <li className="list-group-item">
+          <Link to="/" className="text-decoration-none stretched-link" onClick={()=>{setSelectedCategory('All')}}>
+           All
+          </Link>
+        </li>
+
         {category.map((element)=>{return ( <li className="list-group-item">
-          <Link to="/" className="text-decoration-none stretched-link">
-           {element}
+          <Link to="/" className="text-decoration-none stretched-link"  onClick={()=>{setSelectedCategory(element.slug)}}>
+           {element.name}
           </Link>
         </li>)})}
         {/* <li className="list-group-item">

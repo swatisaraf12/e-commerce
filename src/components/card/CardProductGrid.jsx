@@ -7,16 +7,12 @@ const CardProductGrid = ({ product }) => {
   const addToCartHandler = (product) => {
     const isProductAdded = cart.find((item) => item.id === product.id);
     if (isProductAdded) {
-      console.log(isProductAdded,"isProductAdded")
       const qty = isProductAdded.qty + 1;
       const otherProduct = cart.filter((item) => item.id !== product.id);
-      console.log(otherProduct,"otherProduct")
       addToCart([...otherProduct, { ...product, qty: qty }]);
     } else {
-      console.log([...cart,{ ...product, qty: 1 }],"cart")
       addToCart([...cart,{ ...product, qty: 1 }]);
     }
-    //
   };
   return (
     <div className="card">
@@ -29,7 +25,7 @@ const CardProductGrid = ({ product }) => {
       />
       <div className="card-body">
         <h6 className="card-subtitle mb-2">
-          <Link to={product.link} className="text-decoration-none">
+          <Link to={`/product/detail/id/${product.id}`} className="text-decoration-none">
             {product.title}
           </Link>
         </h6>

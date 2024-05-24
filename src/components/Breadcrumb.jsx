@@ -8,15 +8,7 @@ const Breadcrumb = () => {
           <Link to="/" title="Home">
             Home
           </Link>
-        </li>
-        <li className="breadcrumb-item">
-          <Link to="/" title="Men">
-            Men
-          </Link>
-        </li>
-        <li className="breadcrumb-item active" aria-current="page">
-          T-Shirts
-        </li>
+        </li>    
       </ol>
     </nav>
   );

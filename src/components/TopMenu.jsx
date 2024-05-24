@@ -23,65 +23,7 @@ const { cart } = useContext(AppContext);
         </button>
         <div className="collapse navbar-collapse topbar-container" id="navbarSupportedContent">
           <ul className="navbar-nav">
-            <li className="nav-item dropdown">
-              <button
-                className="btn nav-link dropdown-toggle fw-bold"
-                id="navbarDropdown"
-                data-toggle="dropdown"
-                aria-expanded="false"
-                data-bs-toggle="dropdown"
-              >
-                All Pages
-              </button>
-              <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
-                <li>
-                  <Link className="dropdown-item" to="/account/signin">
-                    Sign In
-                  </Link>
-                </li>
-                <li>
-                  <Link className="dropdown-item" to="/account/signup">
-                    Sign Up
-                  </Link>
-                </li>
-                <li>
-                  <hr className="dropdown-divider" />
-                </li>
-                <li>
-                  <Link className="dropdown-item" to="/checkout">
-                    Checkout Page
-                  </Link>
-                </li>
-                <li>
-                  <Link className="dropdown-item" to="/contact-us">
-                    Contact Us
-                  </Link>
-                </li>
-                <li>
-                  <Link className="dropdown-item" to="/blog">
-                    Blog
-                  </Link>
-                </li>
-                <li>
-                  <Link className="dropdown-item" to="/blog/detail">
-                    Blog Detail
-                  </Link>
-                </li>
-                <li>
-                  <hr className="dropdown-divider" />
-                </li>
-                <li>
-                  <Link className="dropdown-item" to="/fsafasf">
-                    404 Page Not Found
-                  </Link>
-                </li>
-                <li>
-                  <Link className="dropdown-item" to="/500">
-                    500 Internal Server Error
-                  </Link>
-                </li>
-              </ul>
-            </li>
+          
           </ul>
           <div className="col-md-4 cart-profile-container">
             <div className="position-relative d-inline me-3">
@@ -92,7 +34,7 @@ const { cart } = useContext(AppContext);
                 </div>
               </Link>
             </div>
-            <div className="btn-group">
+            {/* <div className="btn-group">
               <button
                 type="button"
                 className="btn btn-secondary rounded-circle border me-3"
@@ -105,22 +47,20 @@ const { cart } = useContext(AppContext);
               </button>
               <ul className="dropdown-menu dropdown-position">
                 <li >
-                  <Link className="dropdown-item" to="/account/profile">
+                  <Link className="dropdown-item" to="/">
                     <i className="bi bi-person-square"></i> My Profile
                   </Link>
                 </li>
                 <li>
-                  <Link className="dropdown-item" to="/star/zone">
-                    <i className="bi bi-star-fill text-warning"></i> Star Zone
-                  </Link>
+                 
                 </li>
                 <li>
-                  <Link className="dropdown-item" to="/account/orders">
+                  <Link className="dropdown-item" to="/">
                     <i className="bi bi-list-check text-primary"></i> Orders
                   </Link>
                 </li>
                 <li>
-                  <Link className="dropdown-item" to="/account/wishlist">
+                  <Link className="dropdown-item" to="/">
                     <i className="bi bi-heart-fill text-danger"></i> Wishlist
                   </Link>
                 </li>
@@ -128,13 +68,13 @@ const { cart } = useContext(AppContext);
                   <hr className="dropdown-divider" />
                 </li>
                 <li>
-                  <Link className="dropdown-item" to="/account/notification">
+                  <Link className="dropdown-item" to="/">
                     <i className="bi bi-bell-fill text-primary"></i>
                     Notification
                   </Link>
                 </li>
                 <li>
-                  <Link className="dropdown-item" to="/support">
+                  <Link className="dropdown-item" to="/">
                     <i className="bi bi-info-circle-fill text-success"></i>
                     Support
                   </Link>
@@ -149,7 +89,7 @@ const { cart } = useContext(AppContext);
                   </Link>
                 </li>
               </ul>
-            </div>
+            </div> */}
             {/* <Link to="/account/signin">Sign In</Link> |{" "}
               <Link to="/account/signup"> Sign Up</Link> */}
           </div>

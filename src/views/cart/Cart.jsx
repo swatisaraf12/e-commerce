@@ -2,31 +2,40 @@ import { useContext } from "react";
 import { Link } from "react-router-dom";
 import { AppContext } from "../../reducers";
 
-
 const CartView = () => {
-  // const onSubmitApplyCouponCode = async (values) => {
-  //   alert(JSON.stringify(values));
-  // };
-  const { cart,addToCart,removeFromCart } = useContext(AppContext);
+  const { cart, addToCart, removeFromCart } = useContext(AppContext);
 
-  const addQty=(product)=>{
+  const addQty = (product) => {
     const isProductAdded = cart.find((item) => item.id === product.id);
     const qty = isProductAdded.qty + 1;
-      const otherProduct = cart.filter((item) => item.id !== product.id);
-      console.log(otherProduct,"otherProduct")
-      addToCart([...otherProduct, { ...product, qty: qty }]);
-  }
-  const lessQty=(product)=>{
+    const newCartArray = cart.map((item) => {
+      if (item.id === product.id) {
+        return { ...item, qty: qty };
+      } else {
+        return item;
+      }
+    });
+    addToCart(newCartArray)
+  };
+  const lessQty = (product) => {
     const isProductAdded = cart.find((item) => item.id === product.id);
     const qty = isProductAdded.qty - 1;
-    if(qty>0)
-     { const otherProduct = cart.filter((item) => item.id !== product.id);
-      console.log(otherProduct,"otherProduct")
-      addToCart([...otherProduct, { ...product, qty: qty }]);
-     }
-  }
+    if (qty > 0) {
+      const newCartArray = cart.map((item) => {
+        if (item.id === product.id) {
+          return { ...item, qty: qty };
+        } else {
+          return item;
+        }
+      });
+      addToCart(newCartArray)
+    }
+  };
 
-const totalPrice=cart.reduce((acc, product) => acc + (product.price*product.qty), 0);
+  const totalPrice = Math.round(
+    cart.reduce((acc, product) => acc + product.price * product.qty, 0),
+    2
+  );
   return (
     <div>
       <div className="bg-secondary border-top p-4 text-white mb-3">
@@ -51,69 +60,80 @@ const totalPrice=cart.reduce((acc, product) => acc + (product.price*product.qty)
                     </tr>
                   </thead>
                   <tbody>
-                    {cart.map((product,index)=>{return (   <tr>
-                      <td>
-                        <div className="row">
-                          <div className="col-3 d-none d-md-block">
-                            <img
-                              src={product.images[0]}
-                              width="80"
-                              alt="..."
-                            />
-                          </div>
-                          <div className="col">
-                            {/* <Link
+                    {cart.map((product, index) => {
+                      return (
+                        <tr>
+                          <td>
+                            <div className="row">
+                              <div className="col-3 d-none d-md-block">
+                                <img
+                                  src={product.images[0]}
+                                  width="80"
+                                  alt="..."
+                                />
+                              </div>
+                              <div className="col">
+                                {/* <Link
                               to="/product/detail"
                               className="text-decoration-none"
                             >
                               Another name of some product goes just here
                             </Link> */}
-                            <p className="small text-muted">
-                              {product.title}
-                            </p>
-                          </div>
-                        </div>
-                      </td>
-                      <td>
-                        <div className="input-group input-group-sm mw-140">
-                          <button
-                            className="btn btn-primary text-white"
-                            type="button"
-                            onClick={()=>{lessQty(product)}}
-                          >
-                            <i className="bi bi-dash-lg"></i>
-                          </button>
-                          <input
-                            type="text"
-                            className="form-control"
-                            defaultValue={product.qty}
-                            value={product.qty}
-                          />
-                          <button
-                            className="btn btn-primary text-white"
-                            type="button"
-                            onClick={()=>{addQty(product)}}
-                          >
-                            <i className="bi bi-plus-lg"></i>
-                          </button>
-                        </div>
-                      </td>
-                      <td>
-                        <var className="price">{product.price*product.qty}</var>
-                        <small className="d-block text-muted">
-                          ${product.price} each
-                        </small>
-                      </td>
-                      <td className="text-end">
-                        {/* <button className="btn btn-sm btn-outline-secondary me-2">
+                                <p className="small text-muted">
+                                  {product.title}
+                                </p>
+                              </div>
+                            </div>
+                          </td>
+                          <td>
+                            <div className="input-group input-group-sm mw-140">
+                              <button
+                                className="btn btn-primary text-white"
+                                type="button"
+                                onClick={() => {
+                                  lessQty(product);
+                                }}
+                              >
+                                <i className="bi bi-dash-lg"></i>
+                              </button>
+                              <input
+                                type="text"
+                                className="form-control"
+                                value={product.qty}
+                              />
+                              <button
+                                className="btn btn-primary text-white"
+                                type="button"
+                                onClick={() => {
+                                  addQty(product);
+                                }}
+                              >
+                                <i className="bi bi-plus-lg"></i>
+                              </button>
+                            </div>
+                          </td>
+                          <td>
+                            <var className="price">
+                              {Math.round(product.price * product.qty, 2)}
+                            </var>
+                            <small className="d-block text-muted">
+                              ${product.price} each
+                            </small>
+                          </td>
+                          <td className="text-end">
+                            {/* <button className="btn btn-sm btn-outline-secondary me-2">
                           <i className="bi bi-heart-fill"></i>
                         </button> */}
-                        <button className="btn btn-sm btn-outline-danger" onClick={()=>removeFromCart(product)}>
-                          <i className="bi bi-trash"></i>
-                        </button>
-                      </td>
-                    </tr>)})}
-                  
+                            <button
+                              className="btn btn-sm btn-outline-danger"
+                              onClick={() => removeFromCart(product)}
+                            >
+                              <i className="bi bi-trash"></i>
+                            </button>
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>
@@ -132,13 +152,13 @@ const totalPrice=cart.reduce((acc, product) => acc + (product.price*product.qty)
               </p>
             </div>
           </div>
-           <div className="col-md-3">
+          <div className="col-md-3">
             {/* <div className="card mb-3">
               <div className="card-body">
                <CouponApplyForm onSubmit={onSubmitApplyCouponCode} /> 
               </div>
             </div>  */}
-            <div className="card" style={{width:"400px"}}>
+            <div className="card" style={{ width: "400px" }}>
               <div className="card-body">
                 <dl className="row border-bottom">
                   <dt className="col-6">Total price:</dt>
@@ -150,12 +170,12 @@ const totalPrice=cart.reduce((acc, product) => acc + (product.price*product.qty)
                     Coupon:{" "}
                     <span className="small text-muted">EXAMPLECODE</span>{" "}
                   </dt>
-                  <dd className="col-6 text-success text-end">-$100</dd>
+                  <dd className="col-6 text-success text-end">-$1</dd>
                 </dl>
                 <dl className="row">
                   <dt className="col-6">Total:</dt>
                   <dd className="col-6 text-end  h5">
-                    <strong>${totalPrice-100}</strong>
+                    <strong>${totalPrice - 1}</strong>
                   </dd>
                 </dl>
                 <hr />

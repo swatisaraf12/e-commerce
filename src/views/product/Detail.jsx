@@ -1,8 +1,8 @@
 import { lazy } from "react";
-import { data } from "../../data";
-const CardFeaturedProduct = lazy(() =>
-  import("../../components/card/CardFeaturedProduct")
-);
+import React, { useContext, useState } from "react";
+import { useParams } from "react-router-dom";
+import { AppContext } from "../../reducers";
+
 const CardServices = lazy(() => import("../../components/card/CardServices"));
 const Details = lazy(() => import("../../components/others/Details"));
 const RatingsReviews = lazy(() =>
@@ -14,41 +14,66 @@ const QuestionAnswer = lazy(() =>
 const ShippingReturns = lazy(() =>
   import("../../components/others/ShippingReturns")
 );
-const SizeChart = lazy(() => import("../../components/others/SizeChart"));
 
 const ProductDetailView = () => {
+  const { id } = useParams();
+  const { products } = useContext(AppContext);
+
+  const product = products.find((item) => item.id === Number(id));
+  const { addToCart, cart } = useContext(AppContext);
+  const [qty, setQty] = useState(1);
+
+  const addQty = () => {
+    setQty((prev) => prev + 1);
+  };
+  const lessQty = () => {
+    if (qty > 1) {
+      setQty((prev) => prev - 1);
+    }
+  };
+
+  const addToCartHandler = (product) => {
+    const isProductAdded = cart.find((item) => item.id === product.id);
+    if (isProductAdded) {
+     
+      const newQty = isProductAdded.qty + qty;
+      const otherProduct = cart.filter((item) => item.id !== product.id);
+      addToCart([...otherProduct, { ...product, qty: newQty }]);
+    } else {
+
+      addToCart([...cart, { ...product, qty: qty }]);
+    }
+
+  };
+
   return (
     <div className="container-fluid mt-3">
       <div className="row">
         <div className="col-md-8">
           <div className="row mb-3">
             <div className="col-md-5 text-center">
+              <img src={product.images[0]} className="img-fluid mb-3" alt="" />
               <img
-                src="../../images/products/tshirt_red_480x400.webp"
-                className="img-fluid mb-3"
-                alt=""
-              />
-              <img
-                src="../../images/products/tshirt_grey_480x400.webp"
+                src={product.images[0]}
                 className="border border-secondary me-2"
                 width="75"
                 alt="..."
               />
               <img
-                src="../../images/products/tshirt_black_480x400.webp"
+                src={product.images[0]}
                 className="border border-secondary me-2"
                 width="75"
                 alt="..."
               />
               <img
-                src="../../images/products/tshirt_green_480x400.webp"
+                src={product.images[0]}
                 className="border border-secondary me-2"
                 width="75"
                 alt="..."
               />
             </div>
             <div className="col-md-7">
-              <h1 className="h5 d-inline me-2">Great product name goes here</h1>
+              <h1 className="h5 d-inline me-2">{product.title}</h1>
               <span className="badge bg-success me-2">New</span>
               <span className="badge bg-danger me-2">Hot</span>
               <div className="mb-3">
@@ -58,15 +83,15 @@ const ProductDetailView = () => {
                 <i className="bi bi-star-fill text-warning me-1" />
                 <i className="bi bi-star-fill text-secondary me-1" />|{" "}
                 <span className="text-muted small">
-                  42 ratings and 4 reviews
+                  {product.rating} rating and {product.reviews.length} reviews
                 </span>
               </div>
               <dl className="row small mb-3">
                 <dt className="col-sm-3">Availability</dt>
-                <dd className="col-sm-9">In stock</dd>
+                <dd className="col-sm-9">{product.availabilityStatus}</dd>
                 <dt className="col-sm-3">Sold by</dt>
-                <dd className="col-sm-9">Authorised Store</dd>
-                <dt className="col-sm-3">Size</dt>
+                <dd className="col-sm-9">{product.brand}</dd>
+                {/* <dt className="col-sm-3">Size</dt>
                 <dd className="col-sm-9">
                   <div className="form-check form-check-inline">
                     <input
@@ -77,7 +102,7 @@ const ProductDetailView = () => {
                       disabled
                     />
                     <label className="form-check-label" htmlFor="sizes">
-                      S
+                      {product.title}
                     </label>
                   </div>
                   <div className="form-check form-check-inline">
@@ -135,15 +160,13 @@ const ProductDetailView = () => {
                   <button className="btn btn-sm btn-warning p-2 me-2"></button>
                   <button className="btn btn-sm btn-info p-2 me-2"></button>
                   <button className="btn btn-sm btn-dark p-2 me-2"></button>
-                </dd>
+                </dd> */}
               </dl>
 
               <div className="mb-3">
-                <span className="fw-bold h5 me-2">$1900</span>
-                <del className="small text-muted me-2">$2000</del>
-                <span className="rounded p-1 bg-warning  me-2 small">
-                  -$100
-                </span>
+                <span className="fw-bold h5 me-2">${product.price - 1}</span>
+                <del className="small text-muted me-2">${product.price}</del>
+                <span className="rounded p-1 bg-warning  me-2 small">-$1</span>
               </div>
               <div className="mb-3">
                 <div className="d-inline float-start me-2">
@@ -151,6 +174,9 @@ const ProductDetailView = () => {
                     <button
                       className="btn btn-primary text-white"
                       type="button"
+                      onClick={() => {
+                        lessQty()
+                      }}
                     >
                       <i className="bi bi-dash-lg"></i>
                     </button>
@@ -158,10 +184,14 @@ const ProductDetailView = () => {
                       type="text"
                       className="form-control"
                       defaultValue="1"
+                      value={qty}
                     />
                     <button
                       className="btn btn-primary text-white"
                       type="button"
+                      onClick={() => {
+                        addQty()
+                      }}
                     >
                       <i className="bi bi-plus-lg"></i>
                     </button>
@@ -171,32 +201,37 @@ const ProductDetailView = () => {
                   type="button"
                   className="btn btn-sm btn-primary me-2"
                   title="Add to cart"
+                  onClick={() => {
+                    addToCartHandler(product);
+                  }}
                 >
                   <i className="bi bi-cart-plus me-1"></i>Add to cart
                 </button>
-                <button
+                {/* <button
                   type="button"
                   className="btn btn-sm btn-warning me-2"
                   title="Buy now"
                 >
                   <i className="bi bi-cart3 me-1"></i>Buy now
-                </button>
-                <button
+                </button> */}
+                {/* <button
                   type="button"
                   className="btn btn-sm btn-outline-secondary"
                   title="Add to wishlist"
                 >
                   <i className="bi bi-heart-fill"></i>
-                </button>
+                </button> */}
               </div>
               <div>
                 <p className="fw-bold mb-2 small">Product Highlights</p>
                 <ul className="small">
+                  <li>{product.description}</li>
+                  <li>Warranty:{product.warrantyInformtion}</li>
+                  <li>Weight: {product.weight} gms</li>
                   <li>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                    Dimensions: {product.dimensions.width}mm *{" "}
+                    {product.dimensions.height}mm * {product.dimensions.depth}mm
                   </li>
-                  <li>Etiam ullamcorper nibh eget faucibus dictum.</li>
-                  <li>Cras consequat felis ut vulputate porttitor.</li>
                 </ul>
               </div>
             </div>
@@ -249,17 +284,6 @@ const ProductDetailView = () => {
                   >
                     Shipping & Returns
                   </a>
-                  <a
-                    className="nav-link"
-                    id="nav-size-chart-tab"
-                    data-bs-toggle="tab"
-                    href="#nav-size-chart"
-                    role="tab"
-                    aria-controls="nav-size-chart"
-                    aria-selected="false"
-                  >
-                    Size Chart
-                  </a>
                 </div>
               </nav>
               <div className="tab-content p-3 small" id="nav-tabContent">
@@ -301,20 +325,12 @@ const ProductDetailView = () => {
                 >
                   <ShippingReturns />
                 </div>
-                <div
-                  className="tab-pane fade"
-                  id="nav-size-chart"
-                  role="tabpanel"
-                  aria-labelledby="nav-size-chart-tab"
-                >
-                  <SizeChart />
-                </div>
               </div>
             </div>
           </div>
         </div>
         <div className="col-md-4">
-          <CardFeaturedProduct data={data.products} />
+          {/* <CardFeaturedProduct data={data.products} /> */}
           <CardServices />
         </div>
       </div>

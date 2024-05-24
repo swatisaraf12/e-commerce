@@ -1,9 +1,8 @@
 import { useContext } from "react";
-import { Link } from "react-router-dom";
 import { AppContext } from "../../reducers";
 const CheckoutView = () => {
   const { cart } = useContext(AppContext);
-  const totalPrice=cart.reduce((acc, product) => acc + (product.price*product.qty), 0);
+  const totalPrice=Math.round(cart.reduce((acc, product) => acc + (product.price*product.qty), 0),2);
   return (
     <div>
       <div className="bg-secondary border-top p-4 text-white mb-3">
@@ -246,7 +245,7 @@ const CheckoutView = () => {
               </div>
               <div className="card-footer border-info d-grid">
                 <button type="button" className="btn btn-info">
-                  Pay Now <strong>${totalPrice-100}</strong>
+                  Pay Now <strong>${totalPrice-1}</strong>
                 </button>
               </div>
             </div>
@@ -263,7 +262,7 @@ const CheckoutView = () => {
                     <h6 className="my-0">{product.title}</h6>
                     <small className="text-muted">{product.brand}</small>
                   </div>
-                  <span className="text-muted">${product.price*product.qty}</span>
+                  <span className="text-muted">${Math.round(product.price*product.qty,2)}</span>
                 </li>)})}
                 {/* <li className="list-group-item d-flex justify-content-between lh-sm">
                   <div>
@@ -291,11 +290,11 @@ const CheckoutView = () => {
                     <h6 className="my-0">Promo code</h6>
                     <small>EXAMPLECODE</small>
                   </div>
-                  <span className="text-success">−$100</span>
+                  <span className="text-success">−$1.00</span>
                 </li>
                 <li className="list-group-item d-flex justify-content-between">
                   <span>Total (USD)</span>
-                  <strong>${totalPrice-100}</strong>
+                  <strong>${totalPrice-1}</strong>
                 </li>
               </ul>
             </div>
